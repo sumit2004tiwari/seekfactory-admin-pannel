@@ -1,25 +1,16 @@
-import { useEffect, useState } from 'react'
 import { Button, Card, CardBody, Col, Row } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { useAdminDashboard } from "@/context/admin/StatAndDashboard";
 
 import PageMetaData from '@/components/PageTitle'
 import IconifyIcon from '@/components/wrappers/IconifyIcon'
-import { getAllTasks } from '@/helpers/data'
-import type { TodoType } from '@/types/data'
 
 const TODO = () => {
-  const [allTasks, setAllTasks] = useState<TodoType[]>()
-
-  useEffect(() => {
-    ;(async () => {
-      const data = await getAllTasks()
-      setAllTasks(data)
-    })()
-  }, [])
+  const { buyers, loading } = useAdminDashboard();
+  console.log(buyers , "buyers")
 
   return (
     <>
-      <PageMetaData title="Todo" />
+      <PageMetaData title="All Buyers" />
       <Row>
         <Col>
           <Card>
@@ -29,130 +20,111 @@ const TODO = () => {
                   <span>
                     <IconifyIcon icon="bx:search-alt" />
                   </span>
-                  <input type="search" className="form-control" id="search" placeholder="Search task..." />
+                  <input
+                    type="search"
+                    className="form-control"
+                    id="search"
+                    placeholder="Search buyer..."
+                  />
                 </div>
-                <div>
-                  <Button variant="primary" className="d-inline-flex align-items-center">
+                {/* <div>
+                  <Button
+                    variant="primary"
+                    className="d-inline-flex align-items-center"
+                  >
                     <IconifyIcon icon="bx:plus" className="me-1" />
-                    Create Task
+                    Add Buyer
                   </Button>
-                </div>
+                </div> */}
               </div>
             </CardBody>
+
             <div>
               <div className="table-responsive table-centered">
                 <table className="table text-nowrap mb-0">
                   <thead className="bg-light bg-opacity-50">
                     <tr>
-                      <th className="border-0 py-2">Task Name</th>
-                      <th className="border-0 py-2">Created Date</th>
-                      <th className="border-0 py-2">Due Date</th>
-                      <th className="border-0 py-2">Assigned</th>
-                      <th className="border-0 py-2">Status</th>
-                      <th className="border-0 py-2">Priority</th>
-                      <th className="border-0 py-2">Action</th>
+                      <th>Name</th>
+                      <th>Email</th>
+                      <th>Phone</th>
+                      <th>Company</th>
+                      <th>Verified</th>
+                      <th>Active</th>
+                      <th>Last Login</th>
+                      <th>Created</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {allTasks?.map((task, idx) => {
-                      return (
-                        <tr key={idx}>
+                    {!loading && buyers.length > 0 ? (
+                      buyers.map((buyer, idx) => (
+                        <tr key={buyer._id || idx}>
+                          <td>{buyer.name}</td>
+                          <td>{buyer.email}</td>
+                          <td>{buyer.phone || "N/A"}</td>
+                          <td>{buyer.companyName || "-"}</td>
                           <td>
-                            <div className="d-flex align-items-center gap-2">
-                              <div className="form-check form-todo ps-4">
-                                <input
-                                  type="checkbox"
-                                  className="form-check-input rounded-circle mt-0 fs-18"
-                                  id={`customCheck${idx}`}
-                                  defaultChecked={task.status === 'Completed' ? true : false}
-                                />
-                                <label className="form-check-label" htmlFor={`customCheck${idx}`}>
-                                  {task.task}
-                                </label>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            {new Date(task.createdAt).toDateString()}&nbsp;
-                            {/* <small> {new Date(task.createdAt).toLocaleTimeString()}</small> */}
-                          </td>
-                          <td>{new Date(task.dueDate).toDateString()}</td>
-                          <td>
-                            <div className="d-flex align-items-center">
-                              {task.employee && <img src={task.employee?.image} alt="avatar" className="avatar-xs rounded-circle me-2" />}
-                              <div>
-                                <h5 className="fs-14 mt-1 fw-normal">{task.employee?.name}</h5>
-                              </div>
-                            </div>
+                            <span
+                              className={`badge ${
+                                buyer.isVerified
+                                  ? "badge-soft-success"
+                                  : "badge-soft-danger"
+                              }`}
+                            >
+                              {buyer.isVerified ? "Verified" : "Not Verified"}
+                            </span>
                           </td>
                           <td>
                             <span
-                              className={`badge badge-soft-${task.status === 'Pending' ? 'primary' : task.status === 'In-Progress' ? 'warning' : 'success'}`}>
-                              {task.status}
+                              className={`badge ${
+                                buyer.isActive
+                                  ? "badge-soft-success"
+                                  : "badge-soft-danger"
+                              }`}
+                            >
+                              {buyer.isActive ? "Active" : "Inactive"}
                             </span>
                           </td>
-                          <td className={`text-${task.priority === 'High' ? 'danger' : task.priority === 'Medium' ? 'warning' : 'success'}`}>
-                            <IconifyIcon icon="bxs:circle" className="me-1" />
-                            {task.priority}
-                          </td>
                           <td>
-                            <Button variant="soft-secondary" size="sm" className="me-2">
+                            {buyer.lastLogin
+                              ? new Date(buyer.lastLogin).toDateString()
+                              : "Never"}
+                          </td>
+                          <td>{new Date(buyer.createdAt).toDateString()}</td>
+                          <td>
+                            <Button
+                              variant="soft-secondary"
+                              size="sm"
+                              className="me-2"
+                            >
                               <IconifyIcon icon="bx:edit" className="fs-16" />
                             </Button>
-                            <Button variant="soft-danger" size="sm" type="button">
+                            <Button
+                              variant="soft-danger"
+                              size="sm"
+                              type="button"
+                            >
                               <IconifyIcon icon="bx:trash" className="fs-16" />
                             </Button>
                           </td>
                         </tr>
-                      )
-                    })}
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={9} className="text-center py-3">
+                          {loading ? "Loading buyers..." : "No buyers found"}
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
-              </div>
-              <div className="align-items-center justify-content-between row g-0 text-center text-sm-start p-3 border-top">
-                <div className="col-sm">
-                  <div className="text-muted">
-                    Showing&nbsp;
-                    <span className="fw-semibold">10</span> of&nbsp;
-                    <span className="fw-semibold">52</span> tasks
-                  </div>
-                </div>
-                <Col sm="auto" className="mt-3 mt-sm-0">
-                  <ul className="pagination pagination-rounded m-0">
-                    <li className="page-item">
-                      <Link to="" className="page-link">
-                        <IconifyIcon icon="bx:left-arrow-alt" />
-                      </Link>
-                    </li>
-                    <li className="page-item active">
-                      <Link to="" className="page-link">
-                        1
-                      </Link>
-                    </li>
-                    <li className="page-item">
-                      <Link to="" className="page-link">
-                        2
-                      </Link>
-                    </li>
-                    <li className="page-item">
-                      <Link to="" className="page-link">
-                        3
-                      </Link>
-                    </li>
-                    <li className="page-item">
-                      <Link to="" className="page-link">
-                        <IconifyIcon icon="bx:right-arrow-alt" />
-                      </Link>
-                    </li>
-                  </ul>
-                </Col>
               </div>
             </div>
           </Card>
         </Col>
       </Row>
     </>
-  )
-}
+  );
+};
 
-export default TODO
+export default TODO;

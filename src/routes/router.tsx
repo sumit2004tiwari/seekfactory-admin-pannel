@@ -1,17 +1,21 @@
 import { Navigate, Route, Routes, type RouteProps } from 'react-router-dom'
 
 import AuthLayout from '@/layouts/AuthLayout'
-import { useAuthContext } from '@/context/useAuthContext'
+import { useAdminAuth } from '@/context/admin/AuthContext'  // ✅ use the hook
 import { appRoutes, authRoutes } from '@/routes/index'
 import AdminLayout from '@/layouts/AdminLayout'
 
 const AppRouter = (props: RouteProps) => {
-  const { isAuthenticated } = useAuthContext()
+  const { admin, loading } = useAdminAuth()  // ✅ get admin from context
 
   return (
     <Routes>
       {(authRoutes || []).map((route, idx) => (
-        <Route key={idx + route.name} path={route.path} element={<AuthLayout {...props}>{route.element}</AuthLayout>} />
+        <Route
+          key={idx + route.name}
+          path={route.path}
+          element={<AuthLayout {...props}>{route.element}</AuthLayout>}
+        />
       ))}
 
       {(appRoutes || []).map((route, idx) => (
@@ -19,14 +23,12 @@ const AppRouter = (props: RouteProps) => {
           key={idx + route.name}
           path={route.path}
           element={
-            isAuthenticated ? (
+            !loading && admin ? (  // ✅ check auth properly
               <AdminLayout {...props}>{route.element}</AdminLayout>
             ) : (
               <Navigate
-                to={{
-                  pathname: '/auth/sign-in',
-                  search: 'redirectTo=' + route.path,
-                }}
+                to={`/auth/sign-in?redirectTo=${route.path}`}
+                replace
               />
             )
           }

@@ -1,26 +1,10 @@
+import BlogEdit from '@/app/(admin)/pages/blog/pages/BlogEdit'
+import BlogEditor from '@/app/(admin)/pages/blog/pages/BlogEditor'
+import BlogList from '@/app/(admin)/pages/blog/pages/BlogList'
+import BlogView from '@/app/(admin)/pages/blog/pages/BlogView'
 import { lazy } from 'react'
 import { Navigate, type RouteProps } from 'react-router-dom'
 
-// Dashboard Routes
-// const Finance = lazy(() => import('@/app/(admin)/dashboard/finance/page'))
-// const Sales = lazy(() => import('@/app/(admin)/dashboard/sales/page'))
-
-// Apps Routes
-// const EcommerceProducts = lazy(() => import('@/app/(admin)/ecommerce/products/page'))
-// const EcommerceProductDetails = lazy(() => import('@/app/(admin)/ecommerce/products/[productId]/page'))
-// const EcommerceProductCreate = lazy(() => import('@/app/(admin)/ecommerce/products/create/page'))
-// const EcommerceCustomers = lazy(() => import('@/app/(admin)/ecommerce/customers/page'))
-// const EcommerceSellers = lazy(() => import('@/app/(admin)/ecommerce/sellers/page'))
-// const EcommerceOrders = lazy(() => import('@/app/(admin)/ecommerce/orders/page'))
-// const EcommerceOrderDetails = lazy(() => import('@/app/(admin)/ecommerce/orders/[orderId]/page'))
-// const Schedule = lazy(() => import('@/app/(admin)/calendar/schedule/page'))
-// const Integration = lazy(() => import('@/app/(admin)/calendar/integration/page'))
-// const EcommerceInventory = lazy(() => import('@/app/(admin)/ecommerce/inventory/page'))
-// const Email = lazy(() => import('@/app/(admin)/apps/email/page'))
-// const Social = lazy(() => import('@/app/(admin)/apps/social/page'))
-// const Contacts = lazy(() => import('@/app/(admin)/apps/contacts/page'))
-// const Maintenance = lazy(() => import('@/app/(other)/maintenance/page'))
-// const ComingSoon = lazy(() => import('@/app/(other)/coming-soon/page'))
 
 
 const Analytics = lazy(() => import('@/app/(admin)/dashboard/analytics/page'))
@@ -28,12 +12,14 @@ const Chat = lazy(() => import('@/app/(admin)/apps/chat/page'))
 const Todo = lazy(() => import('@/app/(admin)/apps/todo/page'))
 const Invoices = lazy(() => import('@/app/(admin)/invoices/page'))
 const InvoiceDetails = lazy(() => import('@/app/(admin)/invoices/[invoiceId]/page'))
+const Contact = lazy(() => import('@/app/(admin)/apps/contact/page'))
 
 // Pages Routes
 const Welcome = lazy(() => import('@/app/(admin)/pages/welcome/page'))
 const FAQs = lazy(() => import('@/app/(admin)/pages/faqs/page'))
 const TimelinePage = lazy(() => import('@/app/(admin)/pages/timeline/page'))
-// const Pricing = lazy(() => import('@/app/(admin)/pages/pricing/page'))
+const CategoryPage = lazy(() => import('@/app/(admin)/pages/category/page'))
+// const Pricing = lazy(() => import('@/app/(admin)/pages/blog/pages/BlogList'))
 const Widgets = lazy(() => import('@/app/(admin)/widgets/page'))
 
 // Base UI Routes
@@ -67,22 +53,22 @@ const Scrollbar = lazy(() => import('@/app/(admin)/advanced/scrollbar/page'))
 const Toastify = lazy(() => import('@/app/(admin)/advanced/toastify/page'))
 
 // Charts and Maps Routes
-const Area = lazy(() => import('@/app/(admin)/charts/area/page'))
+// const Area = lazy(() => import('@/app/(admin)/charts/area/page'))
 const Bar = lazy(() => import('@/app/(admin)/charts/bar/page'))
-const Bubble = lazy(() => import('@/app/(admin)/charts/bubble/page'))
-const Candlestick = lazy(() => import('@/app/(admin)/charts/candlestick/page'))
-const Column = lazy(() => import('@/app/(admin)/charts/column/page'))
-const Heatmap = lazy(() => import('@/app/(admin)/charts/heatmap/page'))
-const Line = lazy(() => import('@/app/(admin)/charts/line/page'))
-const Mixed = lazy(() => import('@/app/(admin)/charts/mixed/page'))
-const Timeline = lazy(() => import('@/app/(admin)/charts/timeline/page'))
-const Boxplot = lazy(() => import('@/app/(admin)/charts/boxplot/page'))
-const Treemap = lazy(() => import('@/app/(admin)/charts/treemap/page'))
-const Pie = lazy(() => import('@/app/(admin)/charts/pie/page'))
-const Radar = lazy(() => import('@/app/(admin)/charts/radar/page'))
-const RadialBar = lazy(() => import('@/app/(admin)/charts/radial-bar/page'))
-const Scatter = lazy(() => import('@/app/(admin)/charts/scatter/page'))
-const Polar = lazy(() => import('@/app/(admin)/charts/polar/page'))
+// const Bubble = lazy(() => import('@/app/(admin)/charts/bubble/page'))
+// const Candlestick = lazy(() => import('@/app/(admin)/charts/candlestick/page'))
+// const Column = lazy(() => import('@/app/(admin)/charts/column/page'))
+// const Heatmap = lazy(() => import('@/app/(admin)/charts/heatmap/page'))
+// const Line = lazy(() => import('@/app/(admin)/charts/line/page'))
+// const Mixed = lazy(() => import('@/app/(admin)/charts/mixed/page'))
+// const Timeline = lazy(() => import('@/app/(admin)/charts/timeline/page'))
+// const Boxplot = lazy(() => import('@/app/(admin)/charts/boxplot/page'))
+// const Treemap = lazy(() => import('@/app/(admin)/charts/treemap/page'))
+// const Pie = lazy(() => import('@/app/(admin)/charts/pie/page'))
+// const Radar = lazy(() => import('@/app/(admin)/charts/radar/page'))
+// const RadialBar = lazy(() => import('@/app/(admin)/charts/radial-bar/page'))
+// const Scatter = lazy(() => import('@/app/(admin)/charts/scatter/page'))
+// const Polar = lazy(() => import('@/app/(admin)/charts/polar/page'))
 const GoogleMaps = lazy(() => import('@/app/(admin)/maps/google/page'))
 const VectorMaps = lazy(() => import('@/app/(admin)/maps/vector/page'))
 
@@ -133,6 +119,7 @@ const initialRoutes: RoutesProps[] = [
 ]
 
 const generalRoutes: RoutesProps[] = [
+
   {
     path: '/dashboard/analytics',
     name: 'Analytics',
@@ -191,16 +178,26 @@ const appsRoutes: RoutesProps[] = [
   //     path: '/ecommerce/inventory',
   //     element: <EcommerceInventory />,
   //   },
+  
+   
+   
+      {
+        name: 'BIS-Chat',
+        path: '/apps/chat/bis', // note: relative path
+        element: <Chat />,
+      },
+      {
+        name: 'Vendor Chat',
+        path: '/apps/chat/vendor', // note: relative path
+        element: <Chat />,
+      },
+    
+  
   {
-    name: 'Chat',
-    path: '/apps/chat',
-    element: <Chat />,
+    name: 'apps-contact',
+    path: '/apps/contact',
+    element: <Contact />,
   },
-  // {
-  //   name: 'Email',
-  //   path: '/apps/email',
-  //   element: <Email />,
-  // },
   // {
   //   name: 'Schedule',
   //   path: '/calendar/schedule',
@@ -235,43 +232,26 @@ const appsRoutes: RoutesProps[] = [
   },
   {
     name: 'Invoices Details',
-    path: '/invoices/:invoiceId',
+    path: '/invoices/:supplierId',
     element: <InvoiceDetails />,
   },
+
 ]
 
 const customRoutes: RoutesProps[] = [
-  {
-    name: 'Welcome',
-    path: '/pages/welcome',
-    element: <Welcome />,
-  },
-  {
-    name: 'FAQs',
-    path: '/pages/faqs',
-    element: <FAQs />,
-  },
-  {
-    name: 'Timeline',
-    path: '/footer',
-    element: <TimelinePage />,
-  },
-  // {
-  //   name: 'Pricing',
-  //   path: '/pages/pricing',
-  //   element: <Pricing />,
-  // },
-  {
-    name: 'Error 404 Alt',
-    path: '/pages/error-404-alt',
-    element: <NotFoundAdmin />,
-  },
-  {
-    name: 'Widgets',
-    path: '/widgets',
-    element: <Widgets />,
-  },
-]
+  { name: 'Welcome', path: '/pages/welcome', element: <Welcome /> },
+  { name: 'About Us', path: '/pages/aboutus', element: <FAQs /> },
+  { name: 'Timeline', path: '/footer', element: <TimelinePage /> },
+  { name: 'Blog-List', path: '/pages/blog', element: <BlogList /> },
+  { name: 'New Blog', path: '/blog/new', element: <BlogEditor /> },
+{ name: 'Blog View', path: '/blog/:id', element: <BlogView /> },
+{ name: 'Blog Edit', path: '/blog/:id/edit', element: <BlogEdit /> },
+  { name: 'Error 404 Alt', path: '/pages/error-404-alt', element: <NotFoundAdmin /> },
+  { name: 'Widgets', path: '/widgets', element: <Widgets /> },
+   { name: 'category', path: '/pages/category', element: <CategoryPage /> },
+];
+
+
 
 const baseUIRoutes: RoutesProps[] = [
   {
@@ -410,85 +390,11 @@ const advancedUIRoutes: RoutesProps[] = [
 ]
 
 const chartsNMapsRoutes: RoutesProps[] = [
-  {
-    name: 'Area',
-    path: '/charts/area',
-    element: <Area />,
-  },
+
   {
     name: 'Bar',
     path: '/charts/bar',
     element: <Bar />,
-  },
-  {
-    name: 'Bubble',
-    path: '/charts/bubble',
-    element: <Bubble />,
-  },
-  {
-    name: 'Candle Stick',
-    path: '/charts/candlestick',
-    element: <Candlestick />,
-  },
-  {
-    name: 'Column',
-    path: '/charts/column',
-    element: <Column />,
-  },
-  {
-    name: 'Heatmap',
-    path: '/charts/heatmap',
-    element: <Heatmap />,
-  },
-  {
-    name: 'Line',
-    path: '/charts/line',
-    element: <Line />,
-  },
-  {
-    name: 'Mixed',
-    path: '/charts/mixed',
-    element: <Mixed />,
-  },
-  {
-    name: 'Timeline',
-    path: '/charts/timeline',
-    element: <Timeline />,
-  },
-  {
-    name: 'Boxplot',
-    path: '/charts/boxplot',
-    element: <Boxplot />,
-  },
-  {
-    name: 'Treemap',
-    path: '/charts/treemap',
-    element: <Treemap />,
-  },
-  {
-    name: 'Pie',
-    path: '/charts/pie',
-    element: <Pie />,
-  },
-  {
-    name: 'Radar',
-    path: '/charts/radar',
-    element: <Radar />,
-  },
-  {
-    name: 'Radial Bar',
-    path: '/charts/radial-bar',
-    element: <RadialBar />,
-  },
-  {
-    name: 'Scatter',
-    path: '/charts/scatter',
-    element: <Scatter />,
-  },
-  {
-    name: 'Polar Area',
-    path: '/charts/polar',
-    element: <Polar />,
   },
   {
     name: 'Google',
@@ -592,11 +498,11 @@ export const authRoutes: RoutesProps[] = [
     path: '/auth/sign-in',
     element: <AuthSignIn2 />,
   },
-  {
-    name: 'Sign Up',
-    path: '/auth/sign-up',
-    element: <AuthSignUp2 />,
-  },
+  // {
+  //   name: 'Sign Up',
+  //   path: '/auth/sign-up',
+  //   element: <AuthSignUp2 />,
+  // },
 
   {
     name: 'Reset Password',

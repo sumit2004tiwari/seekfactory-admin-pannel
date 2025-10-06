@@ -1,63 +1,73 @@
-import { useEffect, useState } from 'react'
-import { Col, Offcanvas } from 'react-bootstrap'
+import { useEffect, useState } from "react";
+import { Col, ListGroup, Button } from "react-bootstrap";
+import { useChatContext } from "@/context/useChatContext";
+import { getAllChats, getMessagesByUser } from "@/helpers/data";
+import type { SocialUserType, MessageType } from "@/types/data";
 
-import { useChatContext } from '@/context/useChatContext'
-import { getAllUsers, getUserById } from '@/helpers/data'
-import type { SocialUserType } from '@/types/data'
-import ChatArea from './ChatArea'
-import ChatLeftSidebar from './ChatLeftSidebar'
+const ChatSystem = () => {
+  const [chatUsers, setChatUsers] = useState<SocialUserType[]>([]);
+  const [selectedUser, setSelectedUser] = useState<SocialUserType | null>(null);
+  const [messages, setMessages] = useState<MessageType[]>([]);
+  const { chatList } = useChatContext();
 
-const fetchSingleUser = async (id: SocialUserType['id']) => {
-  const data = await getUserById(id)
-  if (data) return data
-}
-
-const fetchUsers = async () => {
-  const data = await getAllUsers()
-  if (data) return data
-}
-
-const ChatApp = () => {
-  const [selectedUser, setSelectedUser] = useState<SocialUserType>()
-  const [users, setUsers] = useState<SocialUserType[]>()
-  const { chatList } = useChatContext()
-
+  // Load chat users
   useEffect(() => {
-    const fetchInitial = async () => {
-      setSelectedUser(await fetchSingleUser('101'))
-      setUsers(await fetchUsers())
-    }
-    fetchInitial()
-  }, [])
+    const fetchChats = async () => {
+      const users = await getAllChats(); // fetch users who sent messages
+      setChatUsers(users);
+    };
+    fetchChats();
+  }, []);
 
-  const onUserChange = async (user: SocialUserType) => {
-    setSelectedUser(await fetchSingleUser(user.id))
-  }
+  // Load messages when user is selected
+  useEffect(() => {
+    if (!selectedUser) return;
+    const fetchMessages = async () => {
+      const msgs = await getMessagesByUser(selectedUser.id);
+      setMessages(msgs);
+    };
+    fetchMessages();
+  }, [selectedUser]);
 
   return (
     <>
       <Col xxl={3}>
-        {users && selectedUser && (
-          <>
-            <Offcanvas
-              show={chatList.open}
-              onHide={chatList.toggle}
-              className="offcanvas-xxl offcanvas-start h-100"
-              tabIndex={-1}
-              id="Contactoffcanvas"
-              aria-labelledby="ContactoffcanvasLabel">
-              <ChatLeftSidebar users={users} onUserSelect={onUserChange} selectedUser={selectedUser} />
-            </Offcanvas>
-            <div className="d-none d-xxl-block">
-              <ChatLeftSidebar users={users} onUserSelect={onUserChange} selectedUser={selectedUser} />
-            </div>
-          </>
-        )}
+        <ListGroup>
+          {chatUsers.map((user) => (
+            <ListGroup.Item
+              key={user.id}
+              action
+              active={selectedUser?.id === user.id}
+              onClick={() => setSelectedUser(user)}
+            >
+              {user.name}
+              <div className="small text-muted">{user.lastMessage}</div>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
       </Col>
 
-      <Col xxl={9}>{selectedUser && <ChatArea selectedUser={selectedUser} />}</Col>
+      <Col xxl={9}>
+        {selectedUser ? (
+          <div>
+            <h5>Chat with {selectedUser.name}</h5>
+            <div style={{ maxHeight: "400px", overflowY: "auto" }}>
+              {messages.map((msg, index) => (
+                <div key={index} className={`p-2 my-1 ${msg.fromSelf ? "text-end" : ""}`}>
+                  <div className="bg-light rounded p-2">{msg.content}</div>
+                </div>
+              ))}
+            </div>
+            <Button variant="primary" className="mt-2">
+              Reply
+            </Button>
+          </div>
+        ) : (
+          <div>Select a user to start chatting</div>
+        )}
+      </Col>
     </>
-  )
-}
+  );
+};
 
-export default ChatApp
+export default ChatSystem;
